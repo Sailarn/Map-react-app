@@ -312,6 +312,9 @@ class MapContainer extends Component {
             onDragend={this.centerMoved}
             disableDoubleClickZoom={true}
             scrollwheel={false}
+            zoomControl={false}
+            scaleControl= {false}
+            gestureHandling= {'greedy'}
             onReady={props =>
               this.setState({
                 google: props.google

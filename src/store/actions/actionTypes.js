@@ -10,3 +10,5 @@ export const MARKERS_OFF = 'MARKERS_OFF'
 export const SET_CENTER = 'SET_CENTER'
 
 export const CURRENT_MARKERS = 'CURRENT_MARKERS'
+
+export const LOADED_STATUS = 'LOADED_STATUS'

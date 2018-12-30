@@ -4,7 +4,8 @@ import {
   MARKERS_ON,
   MARKERS_OFF,
   SET_CENTER,
-  CURRENT_MARKERS
+  CURRENT_MARKERS,
+  LOADED_STATUS
 } from "./actionTypes";
 
 export function zoomMap(zoomMap) {
@@ -35,8 +36,18 @@ export function currentMarkers(markers){
     dispatch(setMarkers(markers));
   }
 }
+export function loadedMarkersStatus(status){
+  return dispatch =>{
+    dispatch(loadedStatus(status));
+  }
+}
 
-
+export function loadedStatus(status){
+  return{
+    type: LOADED_STATUS,
+    status
+  }
+}
 export function setMarkers(markers){
   return{
     type: CURRENT_MARKERS,

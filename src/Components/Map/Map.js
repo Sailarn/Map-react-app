@@ -5,7 +5,8 @@ import {
   zoomMap,
   toggleMarkers,
   setCenter,
-  currentMarkers
+  currentMarkers,
+  loadedMarkersStatus
 } from "../../store/actions/map";
 import Wrapper from "../../hoc/MapWrapper/MapWrapper";
 import {
@@ -100,17 +101,23 @@ class MapContainer extends Component {
     }
   };
   loadMarkers = () => {
-    for (let item of this.state.dataBase) {
-      if (item.userId === this.state.currentUserId) {
-        let markers = item.geo.concat(this.state.markersPosition);
-        this.setState({
-          markersPosition: markers,
-          markersCopy: markers,
-          toggleStatus: "Turn Off Markers"
-        });
-        this.props.toggleMarkers(false);
+    if (this.props.loaded === false) {
+      for (let item of this.state.dataBase) {
+        if (
+          item.userId === this.state.currentUserId &&
+          item.geo !== this.state.markersPosition
+        ) {
+          let markers = item.geo.concat(this.state.markersPosition);
+          this.setState({
+            markersPosition: markers,
+            markersCopy: markers,
+            toggleStatus: "Turn Off Markers"
+          });
+          this.props.toggleMarkers(false);
+        }
       }
     }
+    this.props.loadedMarkersStatus(true);
   };
   saveMarkers = () => {
     let data = this.state.dataBase;
@@ -198,8 +205,9 @@ class MapContainer extends Component {
               lat: item.geometry.location.lat(),
               lng: item.geometry.location.lng(),
               name: item.name,
-              icon: item.icon,
-              rating: item.rating
+              rating: item.rating,
+              icon:
+                "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/48/Map-Marker-Marker-Outside-Chartreuse.png"
             });
           }
           this.setState({
@@ -212,7 +220,8 @@ class MapContainer extends Component {
   componentDidMount() {
     if (this.state.markersPosition.length <= 0 && this.props.markers !== "") {
       this.setState({
-        markersPosition: this.state.markersPosition.concat(this.props.markers)
+        markersPosition: this.state.markersPosition.concat(this.props.markers),
+        markersCopy: this.state.markersPosition.concat(this.props.markers)
       });
     }
     this._isMounted = true;
@@ -250,7 +259,7 @@ class MapContainer extends Component {
           fluid
           style={{ position: "absolute", zIndex: "100", padding: "0px" }}
         >
-          <MDBRow center>
+          <MDBRow center className="w-100">
             <MDBBtn color="mdb-color" onClick={this.zoomInMap}>
               ZoomIn
             </MDBBtn>
@@ -261,7 +270,7 @@ class MapContainer extends Component {
               {this.state.toggleStatus}
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.loadMarkers}>
-              Load Markers
+              {this.props.loaded === false ? "Load Markers" : "Loaded"}
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.saveMarkers}>
               {this.state.saveStatus}
@@ -335,7 +344,8 @@ function mapDispatchToProps(dispatch) {
     zoomMap: zoom => dispatch(zoomMap(zoom)),
     toggleMarkers: toggle => dispatch(toggleMarkers(toggle)),
     setCenter: center => dispatch(setCenter(center)),
-    currentMarkers: markers => dispatch(currentMarkers(markers))
+    currentMarkers: markers => dispatch(currentMarkers(markers)),
+    loadedMarkersStatus: loaded => dispatch(loadedMarkersStatus(loaded))
   };
 }
 function mapStateToProps(state) {
@@ -343,7 +353,9 @@ function mapStateToProps(state) {
     zoom: state.zoom.zoom,
     toggle: state.toggle.toggleMarkers,
     currentCenter: state.center.center,
-    markers: state.markers.markers
+    markers: state.markers.markers,
+    loaded: state.loaded.loaded,
+    loadStatus: state.loaded.loadStatus
   };
 }
 export default connect(

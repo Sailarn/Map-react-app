@@ -14,7 +14,7 @@ export const About = props => {
             </p>
             <p className="h3-responsive">Started on</p>
             <p className="h4-responsive">19/11/2018</p>
-            <p className="h5-responsive">End on</p>
+            <p className="h5-responsive">Ended on</p>
             <p className="h4-responsive">26/11/2018</p>
             <p className="h5-responsive">Updated on 07/12/2018</p>
             <p className="h5-responsive">Second update on 30/12/2018 (small one)</p>

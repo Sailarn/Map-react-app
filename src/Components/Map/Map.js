@@ -34,10 +34,10 @@ class MapContainer extends Component {
     selectedPlace: {}, // инфо о выбранном маркере
     currentUserId: localStorage.getItem("userId"), // текущий id пользователя
     markersCopy: [], // копия массива с текущими маркерами
-    dataBase: [], // маленькая база данных
+    dataBase: [], // маленькая база данных 
     saveStatus: "Save Markers" // статус сохранения
-
   };
+  // функция отвечающая за изменения на карте
   onMapChange = (props, l, c) => {
     if (this.state.showingInfoWindow) {
       this.setState({
@@ -57,18 +57,23 @@ class MapContainer extends Component {
       currentMarker: keys
     });
   };
+  // приближение (redux)
   zoomInMap = () => {
     this.props.zoomMap(true);
   };
+  // отдаление (redux)
   zoomOutMap = () => {
     this.props.zoomMap(false);
   };
-  onMarkerClick = (props, marker) =>
+  // информация о маркере
+  onMarkerClick = (props, marker) => {
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
       showingInfoWindow: true
     });
+  };
+  // установка маркера
   setMarker() {
     return Object.keys(this.state.markersPosition).map((pos, index) => {
       let marker = this.state.markersPosition[pos];
@@ -84,6 +89,7 @@ class MapContainer extends Component {
       );
     });
   }
+  // вкл/выкл показ маркеров
   turnOffOn = () => {
     if (this.props.toggle === false) {
       this.props.toggleMarkers(true);
@@ -97,6 +103,7 @@ class MapContainer extends Component {
       });
     }
   };
+  // загрузка маркеров из базы
   loadMarkers = () => {
     if (this.props.loaded === false) {
       for (let item of this.state.dataBase) {
@@ -115,6 +122,7 @@ class MapContainer extends Component {
     }
     this.props.loadedMarkersStatus(true);
   };
+  // сохранение маркеров в локальный state и вызов функции отправки на сервер
   saveMarkers = () => {
     let data = this.state.dataBase;
     if (data.length <= 0) {
@@ -151,6 +159,7 @@ class MapContainer extends Component {
       }
     }
   };
+  // отправка на сервер
   update() {
     fetch("https://api.jsonbin.io/b/5c2957343f8bd92e4cc5fed1", {
       method: "PUT",
@@ -177,6 +186,7 @@ class MapContainer extends Component {
         console.log(error);
       });
   }
+  // выбор что отобразить на карте
   onChooseHandler = event => {
     if (event.target.value === "None" || event.target.value === undefined) {
       this.setState({
@@ -213,6 +223,7 @@ class MapContainer extends Component {
       );
     }
   };
+  // как только компонент загрузился - загрузить базу
   componentDidMount() {
     if (this.state.markersPosition.length <= 0 && this.props.markers !== "") {
       this.setState({
@@ -241,12 +252,13 @@ class MapContainer extends Component {
         console.log(error);
       });
     this.setMarker();
-    //5c2957343f8bd92e4cc5fed1
   }
+  // сохранение маркеров в redux и переключение флага
   componentWillUnmount() {
     this.props.currentMarkers(this.state.markersCopy);
     this._isMounted = false;
   }
+  // отслеживание центра карты для точного отображения выбранных объектов
   centerMoved = (mapProps, map) => {
     const lat = map.center.lat();
     const lng = map.center.lng();
@@ -268,7 +280,9 @@ class MapContainer extends Component {
               ZoomOut
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.turnOffOn}>
-              {this.props.toggle === false ? 'Turn Off Markers': 'Turn On Markers'}
+              {this.props.toggle === false
+                ? "Turn Off Markers"
+                : "Turn On Markers"}
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.loadMarkers}>
               {this.props.loaded === false ? "Load Markers" : "Loaded"}

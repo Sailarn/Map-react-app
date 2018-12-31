@@ -22,21 +22,21 @@ import {
 import "./Map.css";
 
 class MapContainer extends Component {
-  _isMounted = false;
+  _isMounted = false; //во избежание ошибки leak memory
   state = {
-    google: "",
-    scrollwheel: false,
-    disableDefaultUI: true,
-    currentMarker: [],
-    markersPosition: [],
-    showingInfoWindow: false,
-    activeMarker: {},
-    selectedPlace: {},
-    currentUserId: localStorage.getItem("userId"),
-    markersCopy: [],
-    dataBase: [],
-    saveStatus: "Save Markers",
-    toggleStatus: "No Markers"
+    google: "", //ссылка на this.props.google ибо карта обернута в еще один hoc и нет возможности достать его обычным путем
+    scrollwheel: false, //запрет на масштабирование колесиком
+    disableDefaultUI: true, // убран стандартный UI
+    currentMarker: [], // текущий маркер
+    markersPosition: [], // массив всех текущих маркеров
+    showingInfoWindow: false, // состояние инфо окна маркера (вкл/выкл)
+    activeMarker: {}, // активный маркер (для триггера инфо окна)
+    selectedPlace: {}, // инфо о выбранном маркере
+    currentUserId: localStorage.getItem("userId"), // текущий id пользователя
+    markersCopy: [], // копия массива с текущими маркерами
+    dataBase: [], // маленькая база данных
+    saveStatus: "Save Markers" // статус сохранения
+
   };
   onMapChange = (props, l, c) => {
     if (this.state.showingInfoWindow) {
@@ -54,8 +54,7 @@ class MapContainer extends Component {
     this.setState({
       markersPosition: copy,
       markersCopy: copy,
-      currentMarker: keys,
-      toggleStatus: "Turn Off Markers"
+      currentMarker: keys
     });
   };
   zoomInMap = () => {
@@ -72,7 +71,7 @@ class MapContainer extends Component {
     });
   setMarker() {
     return Object.keys(this.state.markersPosition).map((pos, index) => {
-      const marker = this.state.markersPosition[pos];
+      let marker = this.state.markersPosition[pos];
       return (
         <Marker
           onClick={this.onMarkerClick}
@@ -89,14 +88,12 @@ class MapContainer extends Component {
     if (this.props.toggle === false) {
       this.props.toggleMarkers(true);
       this.setState({
-        markersPosition: [],
-        toggleStatus: "Turn On Markers"
+        markersPosition: []
       });
     } else {
       this.props.toggleMarkers(false);
       this.setState({
-        markersPosition: this.state.markersCopy,
-        toggleStatus: "Turn Off Markers"
+        markersPosition: this.state.markersCopy
       });
     }
   };
@@ -110,8 +107,7 @@ class MapContainer extends Component {
           let markers = item.geo.concat(this.state.markersPosition);
           this.setState({
             markersPosition: markers,
-            markersCopy: markers,
-            toggleStatus: "Turn Off Markers"
+            markersCopy: markers
           });
           this.props.toggleMarkers(false);
         }
@@ -144,7 +140,7 @@ class MapContainer extends Component {
         if (item2.userId !== this.state.currentUserId) {
           data.push({
             userId: this.state.currentUserId,
-            geo: [this.state.markersPosition]
+            geo: this.state.markersPosition
           });
           this.setState({
             dataBase: data
@@ -156,7 +152,7 @@ class MapContainer extends Component {
     }
   };
   update() {
-    fetch("https://api.jsonbin.io/b/5bfaab94bd6fba76967fbddf", {
+    fetch("https://api.jsonbin.io/b/5c2957343f8bd92e4cc5fed1", {
       method: "PUT",
       body: JSON.stringify(this.state.dataBase),
       headers: { "Content-type": "application/json" }
@@ -220,12 +216,16 @@ class MapContainer extends Component {
   componentDidMount() {
     if (this.state.markersPosition.length <= 0 && this.props.markers !== "") {
       this.setState({
-        markersPosition: this.state.markersPosition.concat(this.props.markers),
         markersCopy: this.state.markersPosition.concat(this.props.markers)
       });
+      if (this.props.toggle === false) {
+        this.setState({
+          markersPosition: this.state.markersPosition.concat(this.props.markers)
+        });
+      }
     }
     this._isMounted = true;
-    fetch("https://api.jsonbin.io/b/5bfaab94bd6fba76967fbddf/latest", {
+    fetch("https://api.jsonbin.io/b/5c2957343f8bd92e4cc5fed1/latest", {
       method: "GET",
       headers: { "Content-type": "application/json" }
     })
@@ -241,9 +241,10 @@ class MapContainer extends Component {
         console.log(error);
       });
     this.setMarker();
+    //5c2957343f8bd92e4cc5fed1
   }
   componentWillUnmount() {
-    this.props.currentMarkers(this.state.markersPosition);
+    this.props.currentMarkers(this.state.markersCopy);
     this._isMounted = false;
   }
   centerMoved = (mapProps, map) => {
@@ -267,7 +268,7 @@ class MapContainer extends Component {
               ZoomOut
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.turnOffOn}>
-              {this.state.toggleStatus}
+              {this.props.toggle === false ? 'Turn Off Markers': 'Turn On Markers'}
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.loadMarkers}>
               {this.props.loaded === false ? "Load Markers" : "Loaded"}
@@ -313,8 +314,8 @@ class MapContainer extends Component {
             disableDoubleClickZoom={true}
             scrollwheel={false}
             zoomControl={false}
-            scaleControl= {false}
-            gestureHandling= {'greedy'}
+            scaleControl={false}
+            gestureHandling={"greedy"}
             onReady={props =>
               this.setState({
                 google: props.google

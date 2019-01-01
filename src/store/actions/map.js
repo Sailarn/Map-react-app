@@ -1,64 +1,43 @@
 import {
   MAP_ZOOMIN,
   MAP_ZOOMOUT,
-  MARKERS_ON,
-  MARKERS_OFF,
   SET_CENTER,
   CURRENT_MARKERS,
-  LOADED_STATUS
+  LOADED_STATUS,
+  TOGGLE_MARKERS
 } from "./actionTypes";
-
-export function zoomMap(zoomMap) {
-  return dispatch => {
-    if (zoomMap === true) {
-      dispatch(zoomIn());
-    } else {
-      dispatch(zoomOut());
-    }
-  };
-}
-export function toggleMarkers(toggleMarkers) {
-  return dispatch => {
-    if (toggleMarkers === true) {
-      dispatch(toggleOn());
-    } else {
-      dispatch(toggleOff());
-    }
-  };
-}
 export function setCenter(center) {
-  return dispatch => {
-    dispatch(currentCenter(center));
+  return {
+    type: SET_CENTER,
+    center
   };
 }
-export function currentMarkers(markers){
-  return dispatch => {
-    dispatch(setMarkers(markers));
-  }
+export function toggleMarkers(toggle) {
+  return {
+    type: TOGGLE_MARKERS,
+    toggle
+  };
 }
-export function loadedMarkersStatus(status){
-  return dispatch =>{
-    dispatch(loadedStatus(status));
-  }
+export function currentMarkers(markers) {
+  return {
+    type: CURRENT_MARKERS,
+    markers
+  };
 }
-
 export function loadedStatus(status){
   return{
     type: LOADED_STATUS,
     status
   }
 }
-export function setMarkers(markers){
-  return{
-    type: CURRENT_MARKERS,
-    markers
-  }
-}
-export function currentCenter(center){
-  return{
-    type: SET_CENTER,
-    center
-  }
+export function zoomMap(zoom) {
+  return dispatch => {
+    if (zoom === true) {
+      dispatch(zoomIn());
+    } else {
+      dispatch(zoomOut());
+    }
+  };
 }
 export function zoomIn() {
   return {
@@ -70,13 +49,4 @@ export function zoomOut() {
     type: MAP_ZOOMOUT
   };
 }
-export function toggleOn() {
-  return {
-    type: MARKERS_ON
-  };
-}
-export function toggleOff() {
-  return {
-    type: MARKERS_OFF
-  };
-}
+

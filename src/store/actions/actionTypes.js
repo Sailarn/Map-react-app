@@ -4,8 +4,7 @@ export const AUTH_LOGOUT = 'AUTH_LOGOUT'
 export const MAP_ZOOMIN = 'MAP_ZOOMIN'
 export const MAP_ZOOMOUT = 'MAP_ZOOMOUT'
 
-export const MARKERS_ON = 'MARKERS_ON'
-export const MARKERS_OFF = 'MARKERS_OFF'
+export const TOGGLE_MARKERS = 'TOGGLE_MARKERS'
 
 export const SET_CENTER = 'SET_CENTER'
 

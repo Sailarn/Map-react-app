@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Map, Marker, InfoWindow } from "google-maps-react";
 import { connect } from "react-redux";
 import {
+  setCenter,
   zoomMap,
   toggleMarkers,
-  setCenter,
   currentMarkers,
-  loadedMarkersStatus
+  loadedStatus
 } from "../../store/actions/map";
 import Wrapper from "../../hoc/MapWrapper/MapWrapper";
 import {
@@ -34,7 +34,7 @@ class MapContainer extends Component {
     selectedPlace: {}, // инфо о выбранном маркере
     currentUserId: localStorage.getItem("userId"), // текущий id пользователя
     markersCopy: [], // копия массива с текущими маркерами
-    dataBase: [], // маленькая база данных 
+    dataBase: [], // маленькая база данных
     saveStatus: "Save Markers" // статус сохранения
   };
   // функция отвечающая за изменения на карте
@@ -56,14 +56,6 @@ class MapContainer extends Component {
       markersCopy: copy,
       currentMarker: keys
     });
-  };
-  // приближение (redux)
-  zoomInMap = () => {
-    this.props.zoomMap(true);
-  };
-  // отдаление (redux)
-  zoomOutMap = () => {
-    this.props.zoomMap(false);
   };
   // информация о маркере
   onMarkerClick = (props, marker) => {
@@ -120,7 +112,7 @@ class MapContainer extends Component {
         }
       }
     }
-    this.props.loadedMarkersStatus(true);
+    this.props.loadedStatus(true);
   };
   // сохранение маркеров в локальный state и вызов функции отправки на сервер
   saveMarkers = () => {
@@ -190,7 +182,8 @@ class MapContainer extends Component {
   onChooseHandler = event => {
     if (event.target.value === "None" || event.target.value === undefined) {
       this.setState({
-        markersPosition: ""
+        markersCopy: [],
+        markersPosition: []
       });
     } else if (event.target.value !== "") {
       const google = this.state.google;
@@ -217,6 +210,7 @@ class MapContainer extends Component {
             });
           }
           this.setState({
+            markersCopy: requestedData,
             markersPosition: requestedData
           });
         })
@@ -273,10 +267,10 @@ class MapContainer extends Component {
           style={{ position: "absolute", zIndex: "100", padding: "0px" }}
         >
           <MDBRow center className="w-100">
-            <MDBBtn color="mdb-color" onClick={this.zoomInMap}>
+            <MDBBtn color="mdb-color" onClick={() => this.props.zoomMap(true)}>
               ZoomIn
             </MDBBtn>
-            <MDBBtn color="mdb-color" onClick={this.zoomOutMap}>
+            <MDBBtn color="mdb-color" onClick={() => this.props.zoomMap(false)}>
               ZoomOut
             </MDBBtn>
             <MDBBtn color="mdb-color" onClick={this.turnOffOn}>
@@ -363,17 +357,16 @@ function mapDispatchToProps(dispatch) {
     toggleMarkers: toggle => dispatch(toggleMarkers(toggle)),
     setCenter: center => dispatch(setCenter(center)),
     currentMarkers: markers => dispatch(currentMarkers(markers)),
-    loadedMarkersStatus: loaded => dispatch(loadedMarkersStatus(loaded))
+    loadedStatus: loaded => dispatch(loadedStatus(loaded))
   };
 }
 function mapStateToProps(state) {
   return {
-    zoom: state.zoom.zoom,
-    toggle: state.toggle.toggleMarkers,
-    currentCenter: state.center.center,
-    markers: state.markers.markers,
-    loaded: state.loaded.loaded,
-    loadStatus: state.loaded.loadStatus
+    zoom: state.map.zoom,
+    toggle: state.map.toggleMarkers,
+    currentCenter: state.map.center,
+    markers: state.map.markers,
+    loaded: state.map.loaded
   };
 }
 export default connect(

@@ -1,20 +1,201 @@
-@media screen and (max-width: 768px){
-    .btn{
+.account-name {
+    border: 1px solid white;
+    padding: 10px;
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+}
+
+.input-block {
+    height: 40px;
+}
+
+.chosen-item {
+    border-color: black !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.icon-btn {
+    color: white;
+    position: relative;
+    bottom: 52px;
+    left: 192px;
+    border: 1px solid #ced4da;
+    background-color: transparent;
+}
+
+.user-items-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-btn {
+    width: 300px;
+    margin-left: 7px;
+}
+
+.icon-btn:hover {
+    color: green;
+}
+
+.icon {
+    width: 25px;
+    height: 25px;
+    border: 1px solid white;
+    text-align: center;
+    padding-top: 3px;
+}
+
+.user-info {
+    transition: all ease 500ms;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    position: absolute;
+    bottom: 0;
+}
+
+.user-info input {
+    color: white !important;
+}
+
+.user-info label {
+    color: white !important;
+}
+
+.user-info-wrapper {
+    display: flex;
+    margin-top: 100px;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.user-list {
+    margin-top: 5px;
+    max-height: 600px;
+}
+
+.list-item {
+    background-color: transparent;
+    width: 300px;
+    border: 1px solid white;
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+    margin: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-item p {
+    margin: 0;
+}
+
+.open-close-info {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.closed {
+    bottom: -85%;
+}
+
+.scrollbar {
+    overflow-y: scroll;
+}
+
+.scrollbar-black::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+.scrollbar-black::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-black::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #000;
+}
+
+.bordered-black::-webkit-scrollbar-track {
+    -webkit-box-shadow: none;
+    border: 1px solid #000;
+}
+
+.bordered-black::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: none;
+}
+
+.square::-webkit-scrollbar-track {
+    border-radius: 0 !important;
+}
+
+.square::-webkit-scrollbar-thumb {
+    border-radius: 0 !important;
+}
+
+.thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+@media screen and (max-width: 768px) {
+    .btn {
         font-size: 0.80rem !important;
         padding: 0.50rem 0.65rem !important;
     }
-    .row{
+
+    .row {
         margin: 0;
     }
 }
-@media screen and (max-width: 560px){
-    .btn{
+
+@media screen and (max-width: 560px) {
+    .btn {
         font-size: 0.70rem !important;
         padding: 0.40rem 0.55rem !important;
     }
 }
-@media screen and (max-width: 440px){
-    .dropdown-menu{
+
+@media screen and (max-width: 440px) {
+    .dropdown-menu {
         left: -60px !important;
     }
+}
+
+@media screen and (max-width: 400px) {
+    .list-item {
+        width: 250px;
+        margin-left: 30px;
+    }
+
+    .delete-btn {
+        width: 250px;
+        margin-left: 30px;
+    }
+    .closed{
+        bottom: -70%;
+    }
+}
+
+@media screen and (max-height: 850px) {
+    .user-list {
+        max-height: 400px;
+    }
+}
+
+@media screen and (max-height: 650px) {
+    .user-list {
+        max-height: 300px;
+    }
+
 }

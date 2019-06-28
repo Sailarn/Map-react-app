@@ -2,7 +2,7 @@ import React from "react";
 import { MDBContainer, Card, CardBody, CardTitle, Row } from "mdbreact";
 import "./About.css";
 
-export const About = props => {
+export const About = () => {
   return (
     <MDBContainer fluid className="about-container">
       <Row style={{ height: "100vh", alignItems: "center" }} center>

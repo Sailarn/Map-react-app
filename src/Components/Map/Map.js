@@ -89,7 +89,6 @@ class MapContainer extends Component {
             .then(response => response.json())
             .then(data => {
                 if (this._isMounted) {
-                    console.log(data)
                     const base = data;
                     for(let item of base){
                         if(!item.userName){

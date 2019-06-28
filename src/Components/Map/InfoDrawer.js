@@ -9,7 +9,8 @@ import {
 import {connect} from "react-redux";
 import {
     currentMarkers,
-    loadedStatus
+    loadedStatus,
+    setDatabase
 } from "../../store/actions/map";
 
 class InfoDrawer extends Component {
@@ -21,8 +22,7 @@ class InfoDrawer extends Component {
         renameMarkerIndex: 0,
         nameValue: '',
         nameChange: false,
-        currentMarker: {},
-        error: false
+        currentMarker: {}
     };
     toggleInfo = () => {
         this.setState({
@@ -121,10 +121,25 @@ class InfoDrawer extends Component {
         })
     };
     changeName = () => {
-        for (let item of this.props.dataBase) {
+        let data = this.props.dataBase;
+        for (let item of data) {
             if (item.userId === localStorage.getItem("userId")) {
                 item.userName = this.state.nameValue;
-                this.setState({
+                return this.setState({
+                    nameValue: '',
+                    nameChange: false
+                })
+            }
+        }
+        for (let item of data) {
+            if (item.userId !== localStorage.getItem("userId")) {
+                data.push({
+                    userId: localStorage.getItem("userId"),
+                    geo: this.props.markers,
+                    userName: this.state.nameValue
+                });
+                this.props.setDatabase(data);
+                return this.setState({
                     nameValue: '',
                     nameChange: false
                 })
@@ -136,13 +151,13 @@ class InfoDrawer extends Component {
             if (item.userId === localStorage.getItem("userId")) {
                 return this.setState({
                     nameChange: true,
-                    nameValue: item.userName,
-                    error: false
+                    nameValue: item.userName
                 })
             }
         }
         return this.setState({
-            error: true
+            nameChange: true,
+            nameValue: 'UserName'
         })
     };
     burnThemAll = () => {
@@ -160,7 +175,6 @@ class InfoDrawer extends Component {
                         <div className={'account-name'}>Account Name: {this.userName()} <MDBIcon
                             onClick={this.toggleInputName}
                             icon="edit"/></div>
-                        {this.state.error ? <p>You must save markers first</p> : false}
                         {this.state.nameChange ?
                             <div className={'input-block'}>
                                 <MDBInput
@@ -205,7 +219,8 @@ class InfoDrawer extends Component {
 function mapDispatchToProps(dispatch) {
     return {
         currentMarkers: markers => dispatch(currentMarkers(markers)),
-        loadedStatus: (status) => dispatch(loadedStatus(status))
+        loadedStatus: (status) => dispatch(loadedStatus(status)),
+        setDatabase: (data) => dispatch(setDatabase(data))
     };
 }
 

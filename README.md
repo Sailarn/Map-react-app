@@ -14,6 +14,6 @@
 * Change name on your account
 * Change name of your custom markers
 * Delete markers
-## Screenshot
+## Screenshots
 ![alt text](https://picua.org/images/2019/06/29/39ec4cb385d4f0286be43949ff58cbad.png)
 ![alt text](https://picua.org/images/2019/06/29/e456f4de7ab5f70cf63ae97c559e739e.png)
